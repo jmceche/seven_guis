@@ -1,4 +1,4 @@
-import Component from "./guis/Timer";
+import Component from "./guis/CircleDrawer";
 import "./App.css";
 
 function App() {
