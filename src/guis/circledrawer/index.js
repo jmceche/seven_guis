@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import CircleDialog from "./CircleDialog";
+import { hoverDrawnCircle, drawCircle } from "./helpers";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
+import CircleMenu from "./CircleMenu";
 
 const useStyles = makeStyles({
   root: {
@@ -16,9 +16,15 @@ const useStyles = makeStyles({
 
 const CircleDrawer = () => {
   const classes = useStyles();
+  const [history, setHistory] = useState([[]]);
   const [circles, setCircles] = useState([]);
-  const [selCircle, setSelCircle] = useState(null);
+  const [selectedCircle, setSelectedCircle] = useState(null);
+  const [step, setStep] = useState(0);
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    setCircles(history[step]);
+  }, [history, step]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -37,15 +43,6 @@ const CircleDrawer = () => {
     return { xPos, yPos };
   };
 
-  const drawCircle = (ctx, x, y, r, hovered) => {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.strokeStyle = "#000000";
-    ctx.stroke();
-    ctx.fillStyle = hovered ? "#aaaaaa" : "#ffffff";
-    ctx.fill();
-  };
-
   const fillCircle = (circle, hovered) => {
     let newCircles = [...circles];
     const circlePos = newCircles.map((item) => item.id).indexOf(circle.id);
@@ -55,21 +52,19 @@ const CircleDrawer = () => {
 
   const handleClick = (e) => {
     const { xPos, yPos } = getPosition(e);
-
-    setCircles((cir) => [...cir, { id: uuid(), x: xPos, y: yPos, r: 30 }]);
+    const newCircles = [...circles, { id: uuid(), x: xPos, y: yPos, r: 30 }];
+    setHistory((hist) => [...hist.slice(0, step + 1), newCircles]);
+    setStep((step) => step + 1);
   };
-
-  const selecCircle = (circle, xPos, yPos) =>
-    (xPos - circle.x) ** 2 + (yPos - circle.y) ** 2 <= circle.r ** 2;
 
   const handleMouseMove = (e) => {
     const { xPos, yPos } = getPosition(e);
 
     for (let circle of circles) {
-      if (selecCircle(circle, xPos, yPos) && !circle.hovered) {
+      if (hoverDrawnCircle(circle, xPos, yPos) && !circle.hovered) {
         fillCircle(circle, true);
       }
-      if (!selecCircle(circle, xPos, yPos) && circle.hovered) {
+      if (!hoverDrawnCircle(circle, xPos, yPos) && circle.hovered) {
         fillCircle(circle, false);
       }
     }
@@ -79,9 +74,8 @@ const CircleDrawer = () => {
     e.preventDefault();
     const { xPos, yPos } = getPosition(e);
     for (let circle of circles) {
-      if (selecCircle(circle, xPos, yPos)) {
-        setSelCircle(circle);
-        //handleClickOpen();
+      if (hoverDrawnCircle(circle, xPos, yPos)) {
+        setSelectedCircle(circle);
         setAnchorEl(e.currentTarget);
       }
     }
@@ -92,7 +86,17 @@ const CircleDrawer = () => {
     const circlePos = newCircles.map((item) => item.id).indexOf(circle.id);
     newCircles[circlePos] = { ...circle, r: radius };
     setCircles(newCircles);
-    setSelCircle(newCircles[circlePos]);
+    setSelectedCircle(newCircles[circlePos]);
+    setHistory((hist) => [...hist.slice(0, step + 1), newCircles]);
+    setStep((step) => step + 1);
+  };
+
+  const handleUndo = () => {
+    setStep((step) => (step > 0 ? step - 1 : step));
+  };
+
+  const handleRedo = () => {
+    setStep((step) => (step < history.length - 1 ? step + 1 : step));
   };
 
   // DIALOG FROM MATERIAL UI
@@ -103,24 +107,20 @@ const CircleDrawer = () => {
     setOpen(true);
   };
   const handleCloseDialog = () => {
+    setAnchorEl(null);
     setOpen(false);
   };
-
   const handleCloseMenu = () => {
     setAnchorEl(null);
-  };
-
-  const handleClickMenu = () => {
-    handleClickOpenDialog();
   };
 
   return (
     <Grid container>
       <Grid item container justify='center'>
-        <Button variant='contained' color='primary'>
+        <Button variant='contained' color='primary' onClick={handleUndo}>
           Undo
         </Button>
-        <Button variant='contained' color='secondary'>
+        <Button variant='contained' color='secondary' onClick={handleRedo}>
           Redo
         </Button>
       </Grid>
@@ -136,27 +136,21 @@ const CircleDrawer = () => {
         ></canvas>
       </Grid>
 
-      {selCircle && (
+      {selectedCircle && (
         <div className={classes.root}>
           <CircleDialog
-            circle={selCircle}
+            circle={selectedCircle}
             changeRadius={changeRadius}
             open={open}
             onClose={handleCloseDialog}
           />
-          <Menu
-            id='simple-menu'
+          <CircleMenu
+            selectedCircle={selectedCircle}
+            changeRadius={changeRadius}
+            handleClickOpenDialog={handleClickOpenDialog}
             anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleCloseMenu}
-            anchorOrigin={{
-              vertical: selCircle.y,
-              horizontal: selCircle.x,
-            }}
-          >
-            <MenuItem onClick={handleClickMenu}>Adjust Diameter...</MenuItem>
-          </Menu>
+            handleCloseMenu={handleCloseMenu}
+          />
         </div>
       )}
     </Grid>

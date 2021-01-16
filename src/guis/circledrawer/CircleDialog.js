@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slider from "@material-ui/core/Slider";
 
 const CircleDialog = ({ circle, open, onClose, changeRadius }) => {
+  const [radius, setRadius] = useState(circle.r);
   const handleClose = () => {
+    changeRadius(circle, radius);
     onClose();
   };
 
   const handleChange = (e, newRadius) => {
-    changeRadius(circle, newRadius);
+    setRadius(newRadius);
   };
 
   return (
@@ -23,7 +25,7 @@ const CircleDialog = ({ circle, open, onClose, changeRadius }) => {
           Adjust diameter of circle at: ({circle.x}, {circle.y})
         </DialogTitle>
         <Slider
-          value={circle.r}
+          value={radius}
           aria-labelledby='discrete-slider'
           valueLabelDisplay='auto'
           step={1}
