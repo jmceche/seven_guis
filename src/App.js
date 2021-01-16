@@ -1,4 +1,4 @@
-import Component from "./guis/CircleDrawer";
+import Component from "./guis/circledrawer";
 import "./App.css";
 
 function App() {
