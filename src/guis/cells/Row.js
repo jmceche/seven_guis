@@ -1,18 +1,12 @@
 import React from "react";
 import Cell from "./Cell";
 
-const Row = ({ nRow, numberCols, idRow, activeCells, changeCells }) => {
+const Row = ({ numberCols, idRow }) => {
   return (
     <tr>
-      <th scope='row'>{nRow}</th>
-      {numberCols.map((col, index) => (
-        <Cell
-          key={index}
-          idCol={col}
-          idRow={idRow}
-          activeCells={activeCells}
-          changeCells={changeCells}
-        />
+      <th scope='row'>{idRow}</th>
+      {numberCols.map((col) => (
+        <Cell key={`${col}${idRow}`} idCol={col} idRow={idRow} />
       ))}
     </tr>
   );
