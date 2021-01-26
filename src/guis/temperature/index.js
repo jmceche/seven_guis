@@ -23,7 +23,7 @@ const convertKToC = (val) => val - 273.15;
 
 const useStyles = makeStyles({
   root: {
-    height: 300,
+    height: "60vh",
   },
   temps: {
     marginTop: "2rem",

@@ -1,12 +1,8 @@
-import Component from "./guis/cells";
+import Component from "./guis/crud";
 import "./App.css";
 
 function App() {
-  return (
-    <div className='App'>
-      <Component />
-    </div>
-  );
+  return <Component />;
 }
 
 export default App;

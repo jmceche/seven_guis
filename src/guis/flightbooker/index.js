@@ -1,6 +1,22 @@
 import React, { useEffect, useState } from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  nav: {
+    marginBottom: "5rem",
+  },
+});
 
 export default function App() {
+  const classes = useStyles();
   const [noReturn, setNoReturn] = useState(true);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [date, setDate] = useState({
@@ -11,7 +27,6 @@ export default function App() {
 
   useEffect(() => {
     if (returnFlight < oneWay) {
-      setNoReturn(true);
       setButtonDisabled(true);
     } else {
       setNoReturn(false);
@@ -32,40 +47,59 @@ export default function App() {
   };
 
   return (
-    <div className='App'>
-      <form
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "40%",
-          margin: "0 auto",
-        }}
-        onSubmit={handleSubmit}
-      >
-        <select onChange={handleSelect}>
-          <option value='oneway'>one-way flight</option>
-          <option value='return'>return flight</option>
-        </select>
-        <input
-          type='date'
-          format='dd/MM/yyyy'
-          name='oneWay'
-          value={oneWay}
-          onChange={handleChange}
-          className={`.no-flight`}
-        ></input>
-        <input
-          type='date'
-          format='dd/MM/yyyy'
-          name='returnFlight'
-          value={returnFlight}
-          disabled={noReturn}
-          onChange={handleChange}
-        ></input>
-        <button type='submit' disabled={buttonDisabled}>
-          Book
-        </button>
-      </form>
-    </div>
+    <>
+      <AppBar position='static' mb={5} className={classes.nav}>
+        <Toolbar>
+          <Typography id='vertical-slider' variant='h6'>
+            Flight Booker
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container>
+        <FormControl
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "40%",
+            margin: "0 auto",
+          }}
+          onSubmit={handleSubmit}
+        >
+          <Select
+            onChange={handleSelect}
+            defaultValue='return'
+            variant='outlined'
+          >
+            <option value='oneway'>one-way flight</option>
+            <option value='return'>return flight</option>
+          </Select>
+          <TextField
+            type='date'
+            format='dd/MM/yyyy'
+            name='oneWay'
+            value={oneWay}
+            onChange={handleChange}
+            variant='outlined'
+          ></TextField>
+          <TextField
+            type='date'
+            format='dd/MM/yyyy'
+            name='returnFlight'
+            value={returnFlight}
+            disabled={noReturn}
+            onChange={handleChange}
+            variant='outlined'
+          ></TextField>
+          <Button
+            type='submit'
+            disabled={buttonDisabled}
+            variant='contained'
+            color='primary'
+          >
+            Book
+          </Button>
+        </FormControl>
+      </Container>
+    </>
   );
 }

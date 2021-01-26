@@ -1,9 +1,27 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Select from "@material-ui/core/Select";
+
+import { makeStyles } from "@material-ui/core/styles";
 import { v4 as uuid } from "uuid";
 
+const useStyles = makeStyles({
+  nav: {
+    marginBottom: "5rem",
+  },
+  mgbt: {
+    marginBottom: "1rem",
+  },
+});
+
 const Crud = () => {
+  const classes = useStyles();
   const [person, setPerson] = useState({
     name: "",
     surname: "",
@@ -11,26 +29,31 @@ const Crud = () => {
 
   const [people, setPeople] = useState([]);
   const [selected, setSelected] = useState();
-  const [filtered, setFiltered] = useState();
 
   const handleNames = (e) => {
     setPerson({ ...person, [e.target.name]: e.target.value });
   };
 
   const handleCreate = () => {
-    setPeople([...people, { ...person, id: uuid() }]);
+    if (person.name !== "" && person.surname !== "") {
+      setPeople((prevpeople) => [
+        ...prevpeople,
+        { ...person, id: uuid(), filtered: true },
+      ]);
+    }
   };
   const handleUpdate = () => {
     const newPeople = [...people];
-    const pos = newPeople.map((x) => x.id).indexOf(selected.id);
-    newPeople[pos] = person;
-    setPeople(newPeople);
-    setFiltered(newPeople);
+    if (selected) {
+      const pos = newPeople.map((x) => x.id).indexOf(selected.id);
+      newPeople[pos] = { ...newPeople[pos], ...person };
+      setPeople(newPeople);
+    }
   };
   const handleDelete = () => {
     const newPeople = people.filter((person) => person.id !== selected.id);
     setPeople(newPeople);
-    setFiltered(newPeople);
+    setPerson({ name: "", surname: "" });
   };
   const handleSelect = (e) => {
     const sele = people.filter((person) => e.target.value === person.id);
@@ -43,78 +66,94 @@ const Crud = () => {
   };
 
   const handleFilter = (e) => {
-    if (!e.target.value) {
-      setFiltered(null);
-    } else {
-      const newPeople = people.filter(
-        (person) =>
-          person.surname.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
-          -1
-      );
-      setFiltered(newPeople);
-    }
+    const newPeople = [...people];
+
+    newPeople.forEach((person) => {
+      if (
+        person.surname.toLowerCase().indexOf(e.target.value.toLowerCase()) ===
+        -1
+      ) {
+        person.filtered = false;
+      } else {
+        person.filtered = true;
+      }
+    });
+    setPeople(newPeople);
   };
 
   return (
-    <Container>
-      <Grid container justify='center'>
-        <Grid item xs={8}>
-          <label htmlFor='filter'>Filter prefix:</label>
-          <input
-            type='text'
-            name='filter'
-            if='filter'
-            onChange={handleFilter}
-          />
-        </Grid>
-        <Grid item xs={5}>
-          <select
-            name='names'
-            id='names'
-            multiple
-            style={{ width: "300px" }}
-            onChange={handleSelect}
-          >
-            {filtered
-              ? filtered.map((person) => (
-                  <option value={person.id} key={person.id}>
-                    {person.surname},{person.name}
-                  </option>
-                ))
-              : people.map((person) => (
-                  <option value={person.id} key={person.id}>
-                    {person.surname},{person.name}
-                  </option>
-                ))}
-          </select>
-        </Grid>
-        <Grid item container xs={3} justify='center' alignItems='center'>
-          <Grid item xs={12}>
-            <label htmlFor='name'>Name</label>
-            <input
-              type='text'
-              name='name'
-              onChange={handleNames}
-              value={person.name}
-            />
+    <>
+      <AppBar position='static' mb={5} className={classes.nav}>
+        <Toolbar>
+          <Typography id='vertical-slider' variant='h6'>
+            CRUD
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container>
+        <Grid container justify='center' spacing={2}>
+          <Grid item container xs={4} justify='center'>
+            <Grid item xs={12} className={classes.mgbt}>
+              <TextField
+                type='text'
+                name='filter'
+                label='Filter prefix:'
+                id='filter'
+                onChange={handleFilter}
+              />
+            </Grid>
+            <Grid item xs={12} className={classes.mgbt}>
+              <Select
+                multiple
+                native
+                name='names'
+                id='names'
+                style={{ width: "300px" }}
+                onChange={handleSelect}
+              >
+                {people.map(
+                  (person) =>
+                    person.filtered && (
+                      <option value={person.id} key={person.id}>
+                        {person.surname},{person.name}
+                      </option>
+                    )
+                )}
+              </Select>
+            </Grid>
+            <Grid item xs={12}>
+              <Button color='primary' onClick={handleCreate}>
+                Create
+              </Button>
+              <Button onClick={handleUpdate}>Update</Button>
+              <Button color='secondary' onClick={handleDelete}>
+                Delete
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <label htmlFor='surname'>Surname</label>
-            <input
-              type='text'
-              name='surname'
-              onChange={handleNames}
-              value={person.surname}
-            />
+          <Grid item container xs={4} justify='center' alignItems='center'>
+            <Grid item xs={12}>
+              <TextField
+                label='Name:'
+                type='text'
+                name='name'
+                onChange={handleNames}
+                value={person.name}
+                className={classes.mgbt}
+              />
+
+              <TextField
+                label='Surname:'
+                type='text'
+                name='surname'
+                onChange={handleNames}
+                value={person.surname}
+              />
+            </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <button onClick={handleCreate}>Create</button>
-          <button onClick={handleUpdate}>Update</button>
-          <button onClick={handleDelete}>Delete</button>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 };
 
