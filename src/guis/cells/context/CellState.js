@@ -15,18 +15,18 @@ const CellProvider = (props) => {
     } else {
       modData[row][col] = value;
     }
-    setCellData({ ...modData });
+    if (modData !== cellData) {
+      setCellData({ ...modData });
+    }
   };
 
   parser.on("callCellValue", (cellCoord, done) => {
-    if (
-      cellCoord.column.label === parser.cell.col &&
-      cellCoord.row.index + 1 === parser.cell.row
-    ) {
-      done("#REF!");
-    } else {
-      done(cellData[cellCoord.row.index + 1][cellCoord.column.label]);
+    const c = cellCoord.column.label;
+    const r = cellCoord.row.index + 1;
+    if (c === parser.cell.col && r === parser.cell.row) {
+      return done("#REF!");
     }
+    return done(cellData[r][c]);
   });
 
   parser.on("callRangeValue", (startCellCoord, endCellCoord, done) => {
@@ -55,11 +55,14 @@ const CellProvider = (props) => {
   });
 
   const executeFormula = (col, row, value) => {
+    console.log("test");
     parser.cell = { col, row };
-    //console.log(parser.cell);
     let res = parser.parse(value);
     if (res.error) {
       return res.error;
+    }
+    if (res.result[0] === "=") {
+      return executeFormula(col, row, res.result.slice(1));
     }
     return res.result;
   };

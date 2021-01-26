@@ -1,16 +1,18 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import CellContext from "./context/CellContext";
+import usePrevious from "./hooks/usePrevious";
 
 const Cell = ({ idRow, idCol }) => {
   const { cellData, updateCellData, executeFormula } = useContext(CellContext);
-  const [cellVal, setCellVal] = useState("");
+  const [cellVal, setCellVal] = useState(cellData?.[idRow]?.[idCol] || "");
   const [cellDisplay, setCellDisplay] = useState("");
   const [clicked, setClicked] = useState(false);
-
+  const prevVal = usePrevious(cellVal);
   useEffect(() => {
-    if (cellData[idRow]) {
-      //setCellVal(cellData[idRow][idCol]);
-      setCellDisplay(parseFormula(cellVal));
+    if (cellData?.[idRow]?.[idCol]?.[0] === "=") {
+      setCellDisplay(parseFormula(cellData[idRow][idCol]));
+    } else {
+      setCellDisplay(cellVal);
     }
   }, [cellData]);
 
@@ -22,19 +24,26 @@ const Cell = ({ idRow, idCol }) => {
     setClicked(true);
   };
 
+  const handleSubmitValue = () => {
+    if (cellVal !== prevVal) {
+      updateCellData(idCol, idRow, cellVal);
+    }
+    setClicked(false);
+  };
+
   const handleEnterKey = (e) => {
     if (e.keyCode === 13) {
-      updateCellData(idCol, idRow, e.target.value);
-      setClicked(false);
+      handleSubmitValue();
     }
   };
   const handleBlur = () => {
-    setClicked(false);
+    handleSubmitValue();
   };
 
   const parseFormula = (value) => {
     if (value[0] === "=") {
-      return executeFormula(idCol, idRow, value.slice(1));
+      const res = executeFormula(idCol, idRow, value.slice(1));
+      return res;
     }
     return value;
   };
@@ -44,7 +53,7 @@ const Cell = ({ idRow, idCol }) => {
       style={{
         padding: 0,
         margin: 0,
-        width: "100px",
+        minWidth: "100px",
         height: "30px",
         textAlign: "center",
       }}
@@ -56,7 +65,7 @@ const Cell = ({ idRow, idCol }) => {
           style={{
             margin: 0,
             padding: 0,
-            width: "100%",
+            maxWidth: "100%",
             height: "100%",
             appearance: "none",
             border: "none",

@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import { createContext } from "react";
 const CellContext = createContext();
 
 export default CellContext;
