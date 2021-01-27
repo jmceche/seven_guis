@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useHistory, Link } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -63,7 +63,9 @@ const Navbar = () => {
             "chalName"
           ] || ""}
         </Typography>
-        <Typography variant='h6'>7 GUIs</Typography>
+        <Typography variant='h6'>
+          <Link to='/'>7 GUIs</Link>
+        </Typography>
       </Toolbar>
     </AppBar>
   );

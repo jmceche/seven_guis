@@ -7,10 +7,17 @@ import Select from "@material-ui/core/Select";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { v4 as uuid } from "uuid";
+import { Paper } from "@material-ui/core";
 
 const useStyles = makeStyles({
   mgbt: {
     marginBottom: "1rem",
+  },
+  flex: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
@@ -77,68 +84,69 @@ const Crud = () => {
 
   return (
     <>
-      <Container>
-        <Grid container justify='center' spacing={2}>
-          <Grid item container xs={4} justify='center'>
-            <Grid item xs={12} className={classes.mgbt}>
-              <TextField
-                type='text'
-                name='filter'
-                label='Filter prefix:'
-                id='filter'
-                onChange={handleFilter}
-              />
+      <Container maxWidth='md'>
+        <Paper className={classes.margin}>
+          <Grid container justify='center' spacing={0}>
+            <Grid item container xs={6} justify='center'>
+              <Grid item xs={12} className={classes.mgbt}>
+                <TextField
+                  type='text'
+                  name='filter'
+                  label='Filter prefix:'
+                  id='filter'
+                  onChange={handleFilter}
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.mgbt}>
+                <Select
+                  multiple
+                  native
+                  name='names'
+                  id='names'
+                  style={{ width: "300px" }}
+                  onChange={handleSelect}
+                >
+                  {people.map(
+                    (person) =>
+                      person.filtered && (
+                        <option value={person.id} key={person.id}>
+                          {person.surname},{person.name}
+                        </option>
+                      )
+                  )}
+                </Select>
+              </Grid>
+              <Grid item xs={12}>
+                <Button color='primary' onClick={handleCreate}>
+                  Create
+                </Button>
+                <Button onClick={handleUpdate}>Update</Button>
+                <Button color='secondary' onClick={handleDelete}>
+                  Delete
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} className={classes.mgbt}>
-              <Select
-                multiple
-                native
-                name='names'
-                id='names'
-                style={{ width: "300px" }}
-                onChange={handleSelect}
-              >
-                {people.map(
-                  (person) =>
-                    person.filtered && (
-                      <option value={person.id} key={person.id}>
-                        {person.surname},{person.name}
-                      </option>
-                    )
-                )}
-              </Select>
-            </Grid>
-            <Grid item xs={12}>
-              <Button color='primary' onClick={handleCreate}>
-                Create
-              </Button>
-              <Button onClick={handleUpdate}>Update</Button>
-              <Button color='secondary' onClick={handleDelete}>
-                Delete
-              </Button>
+            <Grid item container xs={4} spacing={0}>
+              <Grid item xs={12}>
+                <TextField
+                  label='Name:'
+                  type='text'
+                  name='name'
+                  onChange={handleNames}
+                  value={person.name}
+                  className={classes.mgbt}
+                />
+                <TextField
+                  label='Surname:'
+                  type='text'
+                  name='surname'
+                  onChange={handleNames}
+                  value={person.surname}
+                />
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item container xs={4} justify='center' alignItems='center'>
-            <Grid item xs={12}>
-              <TextField
-                label='Name:'
-                type='text'
-                name='name'
-                onChange={handleNames}
-                value={person.name}
-                className={classes.mgbt}
-              />
-
-              <TextField
-                label='Surname:'
-                type='text'
-                name='surname'
-                onChange={handleNames}
-                value={person.surname}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        </Paper>
       </Container>
     </>
   );

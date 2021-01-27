@@ -14,6 +14,7 @@ const Tasks = ({ title, subtitle, content, children }) => {
       <Task
         title='Counter'
         img={Counter}
+        compPath='counter'
         subtitle='Understanding the basic ideas of a language/toolkit.'
       >
         The task is to build a frame containing a label or read-only textfield{" "}
@@ -24,6 +25,7 @@ const Tasks = ({ title, subtitle, content, children }) => {
       <Task
         title='Temperature Converter'
         img={Temperature}
+        compPath='temperature'
         subtitle='bidirectional data flow, user-provided text input.'
       >
         The task is to build a frame containing two textfields{" "}
@@ -65,10 +67,15 @@ const Tasks = ({ title, subtitle, content, children }) => {
         Fahrenheit is <strong>C = (F - 32) * (5/9)</strong> and the dual
         direction is <strong>F = C * (9/5) + 32</strong>.
       </Task>
-      <Task title='Flight Booker' img={FlightBooker} subtitle='Constraints.'>
-        The task is to build a frame containing a combobox <strong>C</strong>{" "}
-        with the two options “one-way flight” and “return flight”, two
-        textfields{" "}
+      <Task
+        title='Flight Booker'
+        compPath='flight-booker'
+        img={FlightBooker}
+        subtitle='Constraints.'
+      >
+        compPath=The task is to build a fra"" me containing a combobox{" "}
+        <strong>C</strong> with the two options “one-way flight” and “return
+        flight”, two textfields{" "}
         <strong>
           T<sub>1</sub>
         </strong>{" "}
@@ -95,6 +102,7 @@ const Tasks = ({ title, subtitle, content, children }) => {
       <Task
         title='Timer'
         img={Timer}
+        compPath='timer'
         subtitle='concurrency, competing user/signal interactions, responsiveness.'
       >
         The task is to build a frame containing a gauge <strong>G</strong> for
@@ -116,6 +124,7 @@ const Tasks = ({ title, subtitle, content, children }) => {
       <Task
         title='CRUD'
         img={Crud}
+        compPath='crud'
         subtitle='separating the domain and presentation logic, managing mutation, building a non-trivial layout.'
       >
         The task is to build a frame containing the following elements: a
@@ -161,6 +170,7 @@ const Tasks = ({ title, subtitle, content, children }) => {
       <Task
         title='Circle Drawer'
         img={CircleDrawer}
+        compPath='circle-drawer'
         subtitle='undo/redo, custom drawing, dialog control.'
       >
         The task is to build a frame containing an undo and redo button as well
@@ -182,6 +192,7 @@ const Tasks = ({ title, subtitle, content, children }) => {
       <Task
         title='Cells'
         img={Cells}
+        compPath='cells'
         subtitle='change propagation, widget customization, implementing a more authentic/involved GUI application.'
       >
         The task is to create a simple but usable spreadsheet application. The

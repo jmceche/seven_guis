@@ -1,3 +1,11 @@
 .no-flight {
   background: red;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: inherit;
+}
