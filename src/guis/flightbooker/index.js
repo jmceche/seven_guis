@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Container from "@material-ui/core/Container";
@@ -9,11 +6,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
-  nav: {
-    marginBottom: "5rem",
-  },
-});
+const useStyles = makeStyles({});
 
 export default function App() {
   const classes = useStyles();
@@ -48,13 +41,6 @@ export default function App() {
 
   return (
     <>
-      <AppBar position='static' mb={5} className={classes.nav}>
-        <Toolbar>
-          <Typography id='vertical-slider' variant='h6'>
-            Flight Booker
-          </Typography>
-        </Toolbar>
-      </AppBar>
       <Container>
         <FormControl
           style={{

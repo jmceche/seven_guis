@@ -3,18 +3,12 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles({
-  nav: {
-    marginBottom: "5rem",
-  },
   mgbt: {
     marginBottom: "1rem",
   },
@@ -83,13 +77,6 @@ const Crud = () => {
 
   return (
     <>
-      <AppBar position='static' mb={5} className={classes.nav}>
-        <Toolbar>
-          <Typography id='vertical-slider' variant='h6'>
-            CRUD
-          </Typography>
-        </Toolbar>
-      </AppBar>
       <Container>
         <Grid container justify='center' spacing={2}>
           <Grid item container xs={4} justify='center'>

@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  Card,
-  CardContent,
-  Slider,
-  Typography,
-  makeStyles,
-  Container,
-} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Slider from "@material-ui/core/Slider";
+import Container from "@material-ui/core/Container";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { genMarksK } from "./genMarksK";
 import { genMarksC } from "./genMarksC";
@@ -65,14 +60,7 @@ export default function App() {
   };
 
   return (
-    <div>
-      <AppBar position='static' mb={5}>
-        <Toolbar>
-          <Typography id='vertical-slider' variant='h6'>
-            Temperature Calculator
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <>
       <Container className={classes.temps}>
         <Card variant='outlined'>
           <CardContent className={classes.temps}>
@@ -125,6 +113,6 @@ export default function App() {
           </CardContent>
         </Card>
       </Container>
-    </div>
+    </>
   );
 }
