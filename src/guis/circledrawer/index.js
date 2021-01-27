@@ -5,12 +5,18 @@ import { hoverDrawnCircle, drawCircle } from "./helpers";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CircleMenu from "./CircleMenu";
 
 const useStyles = makeStyles({
   root: {
     width: 300,
+  },
+  nav: {
+    marginBottom: "5rem",
   },
 });
 
@@ -115,45 +121,54 @@ const CircleDrawer = () => {
   };
 
   return (
-    <Grid container>
-      <Grid item container justify='center'>
-        <Button variant='contained' color='primary' onClick={handleUndo}>
-          Undo
-        </Button>
-        <Button variant='contained' color='secondary' onClick={handleRedo}>
-          Redo
-        </Button>
-      </Grid>
-      <Grid item container justify='center'>
-        <canvas
-          style={{ border: "2px solid black" }}
-          ref={canvasRef}
-          onClick={handleClick}
-          onMouseMove={handleMouseMove}
-          onContextMenu={handleRightClick}
-          height='600'
-          width='800'
-        ></canvas>
-      </Grid>
+    <>
+      <AppBar position='static' mb={5} className={classes.nav}>
+        <Toolbar>
+          <Typography id='vertical-slider' variant='h6'>
+            Circle Drawer
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Grid container>
+        <Grid item container justify='center'>
+          <Button variant='contained' color='primary' onClick={handleUndo}>
+            Undo
+          </Button>
+          <Button variant='contained' color='secondary' onClick={handleRedo}>
+            Redo
+          </Button>
+        </Grid>
+        <Grid item container justify='center'>
+          <canvas
+            style={{ border: "2px solid black" }}
+            ref={canvasRef}
+            onClick={handleClick}
+            onMouseMove={handleMouseMove}
+            onContextMenu={handleRightClick}
+            height='600'
+            width='800'
+          ></canvas>
+        </Grid>
 
-      {selectedCircle && (
-        <div className={classes.root}>
-          <CircleDialog
-            circle={selectedCircle}
-            changeRadius={changeRadius}
-            open={open}
-            onClose={handleCloseDialog}
-          />
-          <CircleMenu
-            selectedCircle={selectedCircle}
-            changeRadius={changeRadius}
-            handleClickOpenDialog={handleClickOpenDialog}
-            anchorEl={anchorEl}
-            handleCloseMenu={handleCloseMenu}
-          />
-        </div>
-      )}
-    </Grid>
+        {selectedCircle && (
+          <div className={classes.root}>
+            <CircleDialog
+              circle={selectedCircle}
+              changeRadius={changeRadius}
+              open={open}
+              onClose={handleCloseDialog}
+            />
+            <CircleMenu
+              selectedCircle={selectedCircle}
+              changeRadius={changeRadius}
+              handleClickOpenDialog={handleClickOpenDialog}
+              anchorEl={anchorEl}
+              handleCloseMenu={handleCloseMenu}
+            />
+          </div>
+        )}
+      </Grid>
+    </>
   );
 };
 

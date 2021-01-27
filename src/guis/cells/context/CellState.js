@@ -26,6 +26,7 @@ const CellProvider = (props) => {
     if (c === parser.cell.col && r === parser.cell.row) {
       return done("#REF!");
     }
+
     return done(cellData[r][c]);
   });
 
@@ -44,7 +45,22 @@ const CellProvider = (props) => {
         col <= endCellCoord.column.index;
         col++
       ) {
-        colFragment.push(rowData[Object.keys(rowData).sort()[col]]);
+        let value = rowData[Object.keys(rowData).sort()[col]];
+        if (!value) {
+          value = "";
+        }
+        if (value[0] === "=") {
+          const res = executeFormula(
+            Object.keys(rowData).sort()[col],
+            row,
+            value.slice(1)
+          );
+          if (res.error) {
+            throw this.parser.Error(res.error);
+          }
+          value = res;
+        }
+        colFragment.push(value);
       }
       fragment.push(colFragment);
     }
@@ -55,7 +71,6 @@ const CellProvider = (props) => {
   });
 
   const executeFormula = (col, row, value) => {
-    console.log("test");
     parser.cell = { col, row };
     let res = parser.parse(value);
     if (res.error) {

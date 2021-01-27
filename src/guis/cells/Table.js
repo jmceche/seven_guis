@@ -3,8 +3,8 @@ import Row from "./Row";
 
 //const numberRows = new Array(99).fill("");
 //const numberCols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const numberRows = new Array(4).fill("");
-const numberCols = "ABCD".split("");
+const numberRows = new Array(7).fill("");
+const numberCols = "ABCDEFG".split("");
 const Table = () => {
   return (
     <table cellPadding='0' cellSpacing='0' border='1'>

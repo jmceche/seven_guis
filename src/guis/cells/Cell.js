@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import CellContext from "./context/CellContext";
 import usePrevious from "./hooks/usePrevious";
 
@@ -8,6 +8,7 @@ const Cell = ({ idRow, idCol }) => {
   const [cellDisplay, setCellDisplay] = useState("");
   const [clicked, setClicked] = useState(false);
   const prevVal = usePrevious(cellVal);
+
   useEffect(() => {
     if (cellData?.[idRow]?.[idCol]?.[0] === "=") {
       setCellDisplay(parseFormula(cellData[idRow][idCol]));
@@ -65,7 +66,7 @@ const Cell = ({ idRow, idCol }) => {
           style={{
             margin: 0,
             padding: 0,
-            maxWidth: "100%",
+            width: "100px",
             height: "100%",
             appearance: "none",
             border: "none",

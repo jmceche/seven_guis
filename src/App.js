@@ -1,4 +1,4 @@
-import Component from "./guis/crud";
+import Component from "./guis/cells";
 import "./App.css";
 
 function App() {
