@@ -1,21 +1,24 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import CellContext from "./context/CellContext";
 import usePrevious from "./hooks/usePrevious";
 
 const Cell = ({ idRow, idCol }) => {
   const { cellData, updateCellData, executeFormula } = useContext(CellContext);
-  const [cellVal, setCellVal] = useState(cellData?.[idRow]?.[idCol] || "");
-  const [cellDisplay, setCellDisplay] = useState("");
+  const [cellVal, setCellVal] = useState("");
   const [clicked, setClicked] = useState(false);
   const prevVal = usePrevious(cellVal);
 
-  useEffect(() => {
-    if (cellData?.[idRow]?.[idCol]?.[0] === "=") {
-      setCellDisplay(parseFormula(cellData[idRow][idCol]));
-    } else {
-      setCellDisplay(cellVal);
+  const displ = useMemo(() => {
+    if (cellData?.[idRow]?.[idCol]) {
+      const value = cellData[idRow][idCol];
+      if (value[0] === "=") {
+        const res = executeFormula(idCol, idRow, value.slice(1));
+        return res;
+      } else {
+        return value;
+      }
     }
-  }, [cellData]);
+  }, [cellData, executeFormula, idRow, idCol]);
 
   const handleChange = (e) => {
     setCellVal(e.target.value);
@@ -39,14 +42,6 @@ const Cell = ({ idRow, idCol }) => {
   };
   const handleBlur = () => {
     handleSubmitValue();
-  };
-
-  const parseFormula = (value) => {
-    if (value[0] === "=") {
-      const res = executeFormula(idCol, idRow, value.slice(1));
-      return res;
-    }
-    return value;
   };
 
   return (
@@ -85,7 +80,7 @@ const Cell = ({ idRow, idCol }) => {
             margin: 0,
           }}
         >
-          {cellDisplay}
+          {displ}
         </p>
       )}
     </td>
