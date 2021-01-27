@@ -22,7 +22,7 @@ const CircleDialog = ({ circle, open, onClose, changeRadius }) => {
     >
       <DialogTitle aria-labelledby='simple-dialog-title'>
         <DialogTitle id='simple-dialog-title'>
-          Adjust diameter of circle at: ({circle.x}, {circle.y})
+          Adjust radius of circle at: ({circle.x}, {circle.y})
         </DialogTitle>
         <Slider
           value={radius}

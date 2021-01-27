@@ -25,7 +25,7 @@ const CircleMenu = ({
         }}
         getContentAnchorEl={null}
       >
-        <MenuItem onClick={handleClickMenu}>Adjust Diameter...</MenuItem>
+        <MenuItem onClick={handleClickMenu}>Adjust Radius...</MenuItem>
       </Menu>
     </div>
   );
